@@ -18,6 +18,9 @@ while True:
 
   pos_suelo_x -= 1
   pantalla.blit(superficie_suelo,(pos_suelo_x,450))
+  pantalla.blit(superficie_suelo,(pos_suelo_x + 288,450))
+  if pos_suelo_x <= -288:
+    pos_suelo_x = 0
   
   pygame.display.update()
   reloj.tick(60)
