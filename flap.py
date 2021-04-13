@@ -20,6 +20,9 @@ while True:
     if event.type == pygame.QUIT:
       pygame.quit()
       sys.exit()
+    if event.type == pygame.KEYDOWN:
+      if event.key == pygame.K_SPACE:
+        movimiento_ave = -7
 
   pantalla.blit(superficie_fondo, (0,0))
 
