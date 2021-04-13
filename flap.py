@@ -6,6 +6,7 @@ reloj = pygame.time.Clock()
 
 superficie_fondo = pygame.image.load('assets/background-day.png').convert()
 superficie_suelo = pygame.image.load('assets/base.png').convert()
+pos_suelo_x = 0
 
 while True:
   for event in pygame.event.get():
@@ -15,7 +16,8 @@ while True:
 
   pantalla.blit(superficie_fondo, (0,0))
 
-  pantalla.blit(superficie_suelo,(0,450))
+  pos_suelo_x -= 1
+  pantalla.blit(superficie_suelo,(pos_suelo_x,450))
   
   pygame.display.update()
   reloj.tick(60)
