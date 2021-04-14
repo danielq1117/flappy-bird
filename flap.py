@@ -34,6 +34,11 @@ def girar_ave(ave):
   nueva_ave = pygame.transform.rotozoom(ave,-movimiento_ave * 3,1)
   return nueva_ave
 
+def animacion_ave():
+  nueva_ave = cuadros_ave[index_ave]
+  nuevo_rect_ave = nueva_ave.get_rect(center = (50,rect_ave.centery))
+  return nueva_ave,nuevo_rect_ave
+
 pygame.init()
 pantalla = pygame.display.set_mode((288,512))
 reloj = pygame.time.Clock()
@@ -47,8 +52,16 @@ superficie_fondo = pygame.image.load('assets/background-day.png').convert()
 superficie_suelo = pygame.image.load('assets/base.png').convert()
 pos_suelo_x = 0
 
-superficie_ave = pygame.image.load('assets/bluebird-midflap.png').convert_alpha()
+ave_bajo = pygame.image.load('assets/bluebird-downflap.png').convert_alpha()
+ave_medio = pygame.image.load('assets/bluebird-midflap.png').convert_alpha()
+ave_alto = pygame.image.load('assets/bluebird-upflap.png').convert_alpha()
+cuadros_ave = [ave_bajo,ave_medio,ave_alto]
+index_ave = 0
+superficie_ave = cuadros_ave[index_ave]
 rect_ave = superficie_ave.get_rect(center = (50,256))
+
+FLAPAVE = pygame.USEREVENT + 1
+pygame.time.set_timer(FLAPAVE, 200)
 
 superficie_tubo = pygame.image.load('assets/pipe-green.png').convert()
 lista_tubos = []
@@ -73,6 +86,14 @@ while True:
 
     if event.type == SPAWNTUBO:
       lista_tubos.extend(crear_tubo())
+
+    if event.type == FLAPAVE:
+      if index_ave < 2:
+        index_ave += 1
+      else:
+        index_ave = 0
+
+      superficie_ave,rect_ave = animacion_ave()
 
   pantalla.blit(superficie_fondo, (0,0))
 
