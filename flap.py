@@ -30,6 +30,10 @@ def detectar_colisiones(tubos):
 
   return True
 
+def girar_ave(ave):
+  nueva_ave = pygame.transform.rotozoom(ave,-movimiento_ave * 3,1)
+  return nueva_ave
+
 pygame.init()
 pantalla = pygame.display.set_mode((288,512))
 reloj = pygame.time.Clock()
@@ -43,7 +47,7 @@ superficie_fondo = pygame.image.load('assets/background-day.png').convert()
 superficie_suelo = pygame.image.load('assets/base.png').convert()
 pos_suelo_x = 0
 
-superficie_ave = pygame.image.load('assets/bluebird-midflap.png').convert()
+superficie_ave = pygame.image.load('assets/bluebird-midflap.png').convert_alpha()
 rect_ave = superficie_ave.get_rect(center = (50,256))
 
 superficie_tubo = pygame.image.load('assets/pipe-green.png').convert()
@@ -76,7 +80,8 @@ while True:
     # Ave
     movimiento_ave += gravedad
     rect_ave.centery += movimiento_ave
-    pantalla.blit(superficie_ave,rect_ave)
+    ave_girada = girar_ave(superficie_ave)
+    pantalla.blit(ave_girada,rect_ave)
     juego_activo = detectar_colisiones(lista_tubos)
 
     # Tubos
