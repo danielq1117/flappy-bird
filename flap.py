@@ -107,6 +107,9 @@ SPAWNTUBO = pygame.USEREVENT
 pygame.time.set_timer(SPAWNTUBO, 1200)
 altura_tubo = [200,300,400]
 
+superficie_game_over = pygame.image.load('assets/message.png').convert_alpha()
+rect_game_over = superficie_game_over.get_rect(center = (144,256))
+
 while True:
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
@@ -155,6 +158,7 @@ while True:
     # Suelo
     pos_suelo_x -= 1
   else:
+    pantalla.blit(superficie_game_over,rect_game_over)
     high_score = actualizar_high_score(score,high_score)
     mostrar_score('game_over')
     
