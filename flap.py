@@ -1,17 +1,24 @@
 import pygame, sys, random
 
 def crear_tubo():
-  tubo_nuevo = superficie_tubo.get_rect(midtop = (350,256))
-  return tubo_nuevo
+  altura_random =random.choice(altura_tubo)
+  tubo_abajo = superficie_tubo.get_rect(midtop = (350,altura_random))
+  tubo_arriba = superficie_tubo.get_rect(midbottom = (350,altura_random - 150))
+  return tubo_abajo, tubo_arriba
 
 def mover_tubos(tubos):
   for tubo in tubos:
     tubo.centerx -= 5
-  return tubos
+  tubos_visibles = [tubo for tubo in tubos if tubo.right > -50]
+  return tubos_visibles
 
 def mostrar_tubos(tubos):
   for tubo in tubos:
-    pantalla.blit(superficie_tubo,tubo)
+    if tubo.bottom >= 512:
+      pantalla.blit(superficie_tubo,tubo)
+    else:
+      voltear_tubo = pygame.transform.flip(superficie_tubo,False,True)
+      pantalla.blit(voltear_tubo,tubo)
 
 pygame.init()
 pantalla = pygame.display.set_mode((288,512))
@@ -32,6 +39,7 @@ superficie_tubo = pygame.image.load('assets/pipe-green.png').convert()
 lista_tubos = []
 SPAWNTUBO = pygame.USEREVENT
 pygame.time.set_timer(SPAWNTUBO, 1200)
+altura_tubo = [200,300,400]
 
 while True:
   for event in pygame.event.get():
@@ -42,7 +50,7 @@ while True:
       if event.key == pygame.K_SPACE:
         movimiento_ave = -7
     if event.type == SPAWNTUBO:
-      lista_tubos.append(crear_tubo())
+      lista_tubos.extend(crear_tubo())
 
   pantalla.blit(superficie_fondo, (0,0))
 
