@@ -25,10 +25,12 @@ def detectar_colisiones(tubos):
   
   for tubo in tubos:
     if rect_ave.colliderect(tubo):
+      sonido_muerte.play()
       score_activo = True
       return False
 
   if rect_ave.top <= -50 or rect_ave.bottom >= 450:
+    sonido_muerte.play()
     score_activo = True
     return False
 
@@ -69,6 +71,7 @@ def revisar_score():
     for tubo in lista_tubos:
       if 45 < tubo.centerx < 55 and score_activo:
         score += 1
+        sonido_score.play()
         score_activo = False
       if tubo.centerx < 0:
         score_activo = True
@@ -110,6 +113,10 @@ altura_tubo = [200,300,400]
 superficie_game_over = pygame.image.load('assets/message.png').convert_alpha()
 rect_game_over = superficie_game_over.get_rect(center = (144,256))
 
+sonido_flap = pygame.mixer.Sound('sound/sfx_wing.wav')
+sonido_muerte = pygame.mixer.Sound('sound/sfx_hit.wav')
+sonido_score = pygame.mixer.Sound('sound/sfx_point.wav')
+
 while True:
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
@@ -119,6 +126,7 @@ while True:
       if event.key == pygame.K_SPACE:
         if juego_activo:
           movimiento_ave = -7
+          sonido_flap.play()
         else:
           juego_activo = True
           lista_tubos.clear()
