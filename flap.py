@@ -21,11 +21,15 @@ def mostrar_tubos(tubos):
       pantalla.blit(voltear_tubo,tubo)
 
 def detectar_colisiones(tubos):
+  global score_activo
+  
   for tubo in tubos:
     if rect_ave.colliderect(tubo):
+      score_activo = True
       return False
 
   if rect_ave.top <= -50 or rect_ave.bottom >= 450:
+    score_activo = True
     return False
 
   return True
@@ -39,14 +43,48 @@ def animacion_ave():
   nuevo_rect_ave = nueva_ave.get_rect(center = (50,rect_ave.centery))
   return nueva_ave,nuevo_rect_ave
 
+def mostrar_score(estado_juego):
+  if estado_juego == 'activo':
+    superficie_score = fuente.render(str(score),True,(255,255,255))
+    rect_score = superficie_score.get_rect(center = (144,50))
+    pantalla.blit(superficie_score,rect_score)
+  if estado_juego == 'game_over':
+    superficie_score = fuente.render(f'Score: {score}',True,(255,255,255))
+    rect_score = superficie_score.get_rect(center = (144,50))
+    pantalla.blit(superficie_score,rect_score)
+    
+    superficie_high_score = fuente.render(f'High score: {high_score}',True,(255,255,255))
+    rect_high_score = superficie_high_score.get_rect(center = (144,425))
+    pantalla.blit(superficie_high_score,rect_high_score)
+
+def actualizar_high_score(score, high_score):
+  if score > high_score:
+    high_score = score
+  return high_score
+
+def revisar_score():
+  global score, score_activo
+  
+  if lista_tubos:
+    for tubo in lista_tubos:
+      if 45 < tubo.centerx < 55 and score_activo:
+        score += 1
+        score_activo = False
+      if tubo.centerx < 0:
+        score_activo = True
+
 pygame.init()
 pantalla = pygame.display.set_mode((288,512))
 reloj = pygame.time.Clock()
+fuente = pygame.font.Font('04B_19.ttf',20)
 
 # Variables del Juego
 gravedad = 0.25
 movimiento_ave = 0
 juego_activo = True
+score = 0
+high_score = 0
+score_activo = True
 
 superficie_fondo = pygame.image.load('assets/background-day.png').convert()
 superficie_suelo = pygame.image.load('assets/base.png').convert()
@@ -83,6 +121,7 @@ while True:
           lista_tubos.clear()
           rect_ave.center = (50,256)
           movimiento_ave = 0
+          score = 0
 
     if event.type == SPAWNTUBO:
       lista_tubos.extend(crear_tubo())
@@ -109,8 +148,16 @@ while True:
     lista_tubos = mover_tubos(lista_tubos)
     mostrar_tubos(lista_tubos)
     
+    # Score
+    revisar_score()
+    mostrar_score('activo')
+    
     # Suelo
     pos_suelo_x -= 1
+  else:
+    high_score = actualizar_high_score(score,high_score)
+    mostrar_score('game_over')
+    
   pantalla.blit(superficie_suelo,(pos_suelo_x,450))
   pantalla.blit(superficie_suelo,(pos_suelo_x + 288,450))
   if pos_suelo_x <= -288:
